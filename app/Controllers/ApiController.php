@@ -24,6 +24,8 @@ class ApiController extends ResourceController
         $this->transaction_detail = new TransactionDetailModel();
     }
 
+
+
     /**
      * Return the properties of a resource object.
      *
@@ -31,6 +33,36 @@ class ApiController extends ResourceController
      *
      * @return ResponseInterface
      */
+
+    public function index()
+{
+    $data = [ 
+        'results' => [],
+        'status' => ["code" => 401, "description" => "Unauthorized"]
+    ];
+
+    $headers = $this->request->headers(); 
+
+    array_walk($headers, function (&$value, $key) {
+        $value = $value->getValue();
+    });
+
+    if(array_key_exists("Key", $headers)){
+        if ($headers["Key"] == $this->apiKey) {
+            $penjualan = $this->transaction->findAll();
+            
+            foreach ($penjualan as &$pj) {
+                $pj['details'] = $this->transaction_detail->where('transaction_id', $pj['id'])->findAll();
+            }
+
+            $data['status'] = ["code" => 200, "description" => "OK"];
+            $data['results'] = $penjualan;
+
+        }
+    } 
+
+    return $this->respond($data);
+}
     public function show($id = null)
     {
         //
