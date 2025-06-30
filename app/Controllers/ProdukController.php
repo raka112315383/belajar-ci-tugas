@@ -21,15 +21,16 @@ class ProdukController extends BaseController
 
         return view('v_produk', $data);
     }
+
     public function create()
-{
+    {
     $dataFoto = $this->request->getFile('foto');
 
     $dataForm = [
         'nama' => $this->request->getPost('nama'),
         'harga' => $this->request->getPost('harga'),
         'jumlah' => $this->request->getPost('jumlah'),
-        'created_at' => date("Y-m-d H:i:s") 
+        'created_at' => date("Y-m-d H:i:s")
     ];
 
     if ($dataFoto->isValid()) {
@@ -41,8 +42,9 @@ class ProdukController extends BaseController
     $this->product->insert($dataForm);
 
     return redirect('produk')->with('success', 'Data Berhasil Ditambah');
-} 
-public function edit($id)
+    }
+    
+    public function edit($id)
 {
     $dataProduk = $this->product->find($id);
 
@@ -84,6 +86,7 @@ public function delete($id)
 
     return redirect('produk')->with('success', 'Data Berhasil Dihapus');
 }
+
 public function download()
 {
 		//get data from database
@@ -109,5 +112,5 @@ public function download()
 
     // output the generated pdf
     $dompdf->stream($filename);
-}  
+}
 }

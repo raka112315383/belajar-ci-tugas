@@ -1,4 +1,4 @@
 <?= $this->extend('layout') ?>
 <?= $this->section('content') ?>
-Ini halaman FAQ
+<h1> Ini halaman F.A.Q </h1>
 <?= $this->endSection() ?>

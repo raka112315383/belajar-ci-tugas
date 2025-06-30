@@ -3,11 +3,11 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class ProductModel extends Model
+class KategoriProdukModel extends Model
 {
-	protected $table = 'product'; 
+	protected $table = 'productcategory'; 
 	protected $primaryKey = 'id';
 	protected $allowedFields = [
-		'nama','harga','jumlah','foto','created_at','updated_at'
+		'id','nama_kategori','nama_product','deskripsi'
 	];  
 }

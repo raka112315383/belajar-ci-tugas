@@ -23,9 +23,11 @@ if (session()->getFlashData('failed')) {
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
     Tambah Data
 </button>
+
 <a type="button" class="btn btn-success" href="<?= base_url() ?>produk/download">
-    download Data
-<a>
+    Download Data
+</a>
+
 <!-- Table with stripped rows -->
 <table class="table datatable">
     <thead>
@@ -50,14 +52,13 @@ if (session()->getFlashData('failed')) {
                         <img src="<?php echo base_url() . "img/" . $produk['foto'] ?>" width="100px">
                     <?php endif; ?>
                 </td>
-                
                 <td>
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editModal-<?= $produk['id'] ?>">
-    Ubah
-</button>
-<a href="<?= base_url('produk/delete/' . $produk['id']) ?>" class="btn btn-danger" onclick="return confirm('Yakin hapus data ini ?')">
-    Hapus
-</a>
+                    Ubah
+                </button>
+                <a href="<?= base_url('produk/delete/' . $produk['id']) ?>" class="btn btn-danger" onclick="return confirm('Yakin hapus data ini ?')">
+                    Hapus
+                </a>
                 </td>
             </tr>
             <!-- Edit Modal Begin -->
@@ -103,15 +104,12 @@ if (session()->getFlashData('failed')) {
         </div>
     </div>
 </div>
-
 <!-- Edit Modal End -->
         <?php endforeach ?>
-        
-
+    </tbody>
 </table>
-<!-- End Table with stripped rows -->
+<!-- End Table with stripped rows --> 
  <!-- Add Modal Begin -->
-  <!-- Add Modal Begin -->
 <div class="modal fade" id="addModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -148,5 +146,4 @@ if (session()->getFlashData('failed')) {
     </div>
 </div>
 <!-- Add Modal End -->
-<!-- Add Modal End --> 
 <?= $this->endSection() ?>

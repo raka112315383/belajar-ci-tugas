@@ -4,7 +4,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
         <li class="nav-item">
-            <a class="nav-link <?php echo (uri_string() == '') ? "" : "collapsed" ?>" href=".">
+            <a class="nav-link <?php echo (uri_string() == '') ? "" : "collapsed" ?>" href="/">
                 <i class="bi bi-grid"></i>
                 <span>Home</span>
             </a>
@@ -26,6 +26,13 @@
                 </a>
             </li><!-- End Produk Nav -->
 
+        <li class="nav-item">
+    <a class="nav-link <?php echo (uri_string() == 'profile') ? "" : "collapsed" ?>" href="profile">
+        <i class="bi bi-person"></i>
+        <span>Profile</span>
+    </a>
+</li><!-- End Profile Nav -->
+
             <li class="nav-item">
                 <a class="nav-link <?php echo (uri_string() == 'kategoriproduk') ? "" : "collapsed" ?>" href="kategoriproduk">
                     <i class="bi bi-receipt"></i>
@@ -41,21 +48,21 @@
                 <i class="bi bi-person"></i>
                 <span>Profile</span>
             </a>
-        </li> <!-- End Profile Nav -->
+        </li><!-- End faq Nav -->
 
         <li class="nav-item">
             <a class="nav-link <?php echo (uri_string() == 'faq') ? "" : "collapsed" ?>" href="faq">
                 <i class="bi bi-question-circle"></i>
-                <span>FAQ</span>
+                <span>F.A.Q</span>
             </a>
-        </li><!--End FAQ Nav -->
+        </li><!-- End faq Nav -->
 
         <li class="nav-item">
             <a class="nav-link <?php echo (uri_string() == 'contact') ? "" : "collapsed" ?>" href="contact">
                 <i class="bi bi-envelope"></i>
                 <span>Contact</span>
             </a>
-        </li><!-- End Contact Nav -->
+        </li><!-- End faq contact -->
     </ul>
 
 </aside><!-- End Sidebar-->
