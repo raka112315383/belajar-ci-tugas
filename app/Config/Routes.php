@@ -20,6 +20,15 @@ $routes->group('produk', ['filter' => 'auth'], function ($routes) {
     $routes->get('download', 'ProdukController::download');
 });
 
+$routes->group('diskon', ['filter' => 'auth'], function($routes) {
+    $routes->get('/', 'DiscountController::index');
+    $routes->post('save', 'DiscountController::save');
+    $routes->get('edit/(:num)', 'DiscountController::edit/$1');
+    $routes->post('update/(:num)', 'DiscountController::update/$1');
+    $routes->get('delete/(:num)', 'DiscountController::delete/$1');
+});
+
+
 $routes->group('keranjang', ['filter' => 'auth'], function ($routes) {
     $routes->get('', 'TransaksiController::index');
     $routes->post('', 'TransaksiController::cart_add');
@@ -43,7 +52,6 @@ $routes->get('get-location', 'TransaksiController::getLocation', ['filter' => 'a
 $routes->get('get-cost', 'TransaksiController::getCost', ['filter' => 'auth']);
 
 $routes->get('faq', 'Home::faq', ['filter' => 'auth']);
-$routes->get('profile', 'Home::profile', ['filter' => 'auth']);
 $routes->get('profile', 'Home::profile', ['filter' => 'auth']);
 $routes->get('contact', 'Home::contact', ['filter' => 'auth']);
 

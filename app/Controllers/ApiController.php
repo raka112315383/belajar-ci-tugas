@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
+use CodeIgniter\API\ResponseTrait; // Pastikan ini di-use
 
 use App\Models\UserModel;
 use App\Models\TransactionModel;
@@ -11,6 +12,8 @@ use App\Models\TransactionDetailModel;
 
 class ApiController extends ResourceController
 {
+    use ResponseTrait; // Pastikan ini di-use
+
     protected $apiKey;
     protected $user;
     protected $transaction;
@@ -18,13 +21,11 @@ class ApiController extends ResourceController
 
     function __construct()
     {
-        $this->apiKey = env('API_KEY');
+        $this->apiKey = env('API_KEY'); // Pastikan API_KEY ada di .env
         $this->user = new UserModel();
         $this->transaction = new TransactionModel();
         $this->transaction_detail = new TransactionDetailModel();
     }
-
-
 
     /**
      * Return the properties of a resource object.
@@ -33,94 +34,77 @@ class ApiController extends ResourceController
      *
      * @return ResponseInterface
      */
-
     public function index()
-{
-    $data = [ 
-        'results' => [],
-        'status' => ["code" => 401, "description" => "Unauthorized"]
-    ];
+    {
+        $data = [
+            'results' => [],
+            'status' => ["code" => 401, "description" => "Unauthorized"]
+        ];
 
-    $headers = $this->request->headers(); 
+        $headers = $this->request->headers();
 
-    array_walk($headers, function (&$value, $key) {
-        $value = $value->getValue();
-    });
+        // Convert header objects to string values
+        array_walk($headers, function (&$value, $key) {
+            $value = $value->getValue();
+        });
 
-    if(array_key_exists("Key", $headers)){
-        if ($headers["Key"] == $this->apiKey) {
+        // Check if 'Key' header exists and matches the API key
+        if(array_key_exists("Key", $headers) && $headers["Key"] == $this->apiKey){
             $penjualan = $this->transaction->findAll();
             
-            foreach ($penjualan as &$pj) {
-                $pj['details'] = $this->transaction_detail->where('transaction_id', $pj['id'])->findAll();
+            $processedPenjualan = [];
+            foreach ($penjualan as $pj) {
+                $details = $this->transaction_detail->where('transaction_id', $pj['id'])->findAll();
+                
+                $totalItems = 0;
+                foreach ($details as $detail) {
+                    $totalItems += $detail['jumlah']; // Menjumlahkan 'jumlah' dari setiap item detail
+                }
+
+                // Tambahkan 'total_items' ke array transaksi
+                $pj['total_items'] = $totalItems;
+                $pj['details'] = $details; // Tetap sertakan detail jika diperlukan di frontend
+
+                $processedPenjualan[] = $pj;
             }
 
             $data['status'] = ["code" => 200, "description" => "OK"];
-            $data['results'] = $penjualan;
-
+            $data['results'] = $processedPenjualan; // Gunakan array yang sudah diproses
+        } else {
+            // Jika API Key tidak cocok atau tidak ada
+            $data['status'] = ["code" => 401, "description" => "Unauthorized: Invalid API Key"];
         }
-    } 
 
-    return $this->respond($data);
-}
+        return $this->respond($data);
+    }
+
     public function show($id = null)
     {
-        //
+        // ... (kode show Anda, tidak ada perubahan di sini)
     }
 
-    /**
-     * Return a new resource object, with default properties.
-     *
-     * @return ResponseInterface
-     */
     public function new()
     {
-        //
+        // ... (kode new Anda, tidak ada perubahan di sini)
     }
 
-    /**
-     * Create a new resource object, from "posted" parameters.
-     *
-     * @return ResponseInterface
-     */
     public function create()
     {
-        //
+        // ... (kode create Anda, tidak ada perubahan di sini)
     }
 
-    /**
-     * Return the editable properties of a resource object.
-     *
-     * @param int|string|null $id
-     *
-     * @return ResponseInterface
-     */
     public function edit($id = null)
     {
-        //
+        // ... (kode edit Anda, tidak ada perubahan di sini)
     }
 
-    /**
-     * Add or update a model resource, from "posted" properties.
-     *
-     * @param int|string|null $id
-     *
-     * @return ResponseInterface
-     */
     public function update($id = null)
     {
-        //
+        // ... (kode update Anda, tidak ada perubahan di sini)
     }
 
-    /**
-     * Delete the designated resource object from the model.
-     *
-     * @param int|string|null $id
-     *
-     * @return ResponseInterface
-     */
     public function delete($id = null)
     {
-        //
+        // ... (kode delete Anda, tidak ada perubahan di sini)
     }
 }

@@ -11,14 +11,12 @@ if (session()->getFlashData('success')) {
 }
 ?>
 <?php echo form_open('keranjang/edit') ?>
-<!-- Table with stripped rows -->
 <table class="table datatable">
     <thead>
         <tr>
             <th scope="col">Nama</th>
             <th scope="col">Foto</th>
-            <th scope="col">Harga</th>
-            <th scope="col">Jumlah</th>
+            <th scope="col">Harga Asli</th> <th scope="col">Diskon Diterapkan</th> <th scope="col">Harga Setelah Diskon</th> <th scope="col">Jumlah</th>
             <th scope="col">Subtotal</th>
             <th scope="col">Aksi</th>
         </tr>
@@ -32,6 +30,25 @@ if (session()->getFlashData('success')) {
                 <tr>
                     <td><?php echo $item['name'] ?></td>
                     <td><img src="<?php echo base_url() . "img/" . $item['options']['foto'] ?>" width="100px"></td>
+                    <td>
+                        <?php 
+                        if (isset($item['options']['original_price'])) {
+                            echo number_to_currency($item['options']['original_price'], 'IDR');
+                        } else {
+                            // Fallback jika original_price tidak tersedia (misal: produk lama di keranjang)
+                            echo number_to_currency($item['price'] + (isset($item['options']['applied_discount']) ? $item['options']['applied_discount'] : 0), 'IDR');
+                        }
+                        ?>
+                    </td>
+                    <td>
+                        <?php 
+                        if (isset($item['options']['applied_discount']) && $item['options']['applied_discount'] > 0) {
+                            echo "- " . number_to_currency($item['options']['applied_discount'], 'IDR');
+                        } else {
+                            echo "Tidak ada";
+                        }
+                        ?>
+                    </td>
                     <td><?php echo number_to_currency($item['price'], 'IDR') ?></td>
                     <td><input type="number" min="1" name="qty<?php echo $i++ ?>" class="form-control" value="<?php echo $item['qty'] ?>"></td>
                     <td><?php echo number_to_currency($item['subtotal'], 'IDR') ?></td>
@@ -45,7 +62,6 @@ if (session()->getFlashData('success')) {
         ?>
     </tbody>
 </table>
-<!-- End Table with stripped rows -->
 <div class="alert alert-info">
     <?php echo "Total = " . number_to_currency($total, 'IDR') ?>
 </div>

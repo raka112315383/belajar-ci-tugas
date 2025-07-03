@@ -8,6 +8,7 @@ use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use App\Models\DiscountModel; // PENTING: Import DiscountModel
 
 /**
  * Class BaseController
@@ -15,7 +16,7 @@ use Psr\Log\LoggerInterface;
  * BaseController provides a convenient place for loading components
  * and performing functions that are needed by all your controllers.
  * Extend this class in any new controllers:
- *     class Home extends BaseController
+ * class Home extends BaseController
  *
  * For security be sure to declare any new methods as protected or private.
  */
@@ -41,7 +42,8 @@ abstract class BaseController extends Controller
      * Be sure to declare properties for any property fetch you initialized.
      * The creation of dynamic property is deprecated in PHP 8.2.
      */
-    // protected $session;
+    protected $session; // PENTING: Aktifkan properti session
+    protected $discountModel; // PENTING: Deklarasikan properti untuk DiscountModel
 
     /**
      * @return void
@@ -54,5 +56,24 @@ abstract class BaseController extends Controller
         // Preload any models, libraries, etc, here.
 
         // E.g.: $this->session = service('session');
+        $this->session = service('session'); // PENTING: Inisialisasi session service
+        $this->discountModel = new DiscountModel(); // PENTING: Inisialisasi DiscountModel
+
+        // --- LOGIKA PENCARIAN & PENYIMPANAN DISKON KE SESSION ---
+        // Mendapatkan tanggal hari ini dalam format YYYY-MM-DD
+        // Menggunakan date() karena Time::now() mungkin belum terdefinisi di BaseController jika tidak di-import
+        $today = date('Y-m-d'); 
+        
+        // Mencari diskon berdasarkan tanggal hari ini
+        $discountToday = $this->discountModel->where('tanggal', $today)->first();
+
+        if ($discountToday) {
+            // Jika diskon ditemukan, simpan nominalnya ke session reguler (bukan flashdata)
+            $this->session->set('today_discount', $discountToday['nominal']);
+        } else {
+            // Jika tidak ada diskon hari ini, hapus dari session
+            $this->session->remove('today_discount');
+        }
+        // --- AKHIR LOGIKA DISKON ---
     }
 }
